@@ -1,0 +1,649 @@
+/* ============================================================
+   Aurora Life Dashboard — css/style.css
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   1. CSS Custom Properties — Pearl Aurora (Light Theme)
+   ------------------------------------------------------------ */
+:root {
+  --bg-page:         #f0f0f7;
+  --bg-card:         rgba(255, 255, 255, 0.72);
+  --bg-card-border:  rgba(255, 255, 255, 0.9);
+  --text-primary:    #1a1a2e;
+  --text-secondary:  #4a4a6a;
+  --text-muted:      #8888aa;
+  --accent-start:    #7c3aed;
+  --accent-end:      #4f46e5;
+  --accent-solid:    #6d28d9;
+  --accent-hover:    #5b21b6;
+  --success:         #059669;
+  --danger:          #dc2626;
+  --warning:         #d97706;
+  --shadow-card:     0 8px 32px rgba(99, 102, 241, 0.12);
+  --shadow-hover:    0 16px 48px rgba(99, 102, 241, 0.22);
+  --blur:            16px;
+}
+
+/* ------------------------------------------------------------
+   2. CSS Custom Properties — Midnight Aurora (Dark Theme)
+   ------------------------------------------------------------ */
+[data-theme="dark"] {
+  --bg-page:         #0d0d1a;
+  --bg-card:         rgba(255, 255, 255, 0.06);
+  --bg-card-border:  rgba(255, 255, 255, 0.12);
+  --text-primary:    #f0f0ff;
+  --text-secondary:  #b0b0d0;
+  --text-muted:      #6060a0;
+  --accent-start:    #a78bfa;
+  --accent-end:      #818cf8;
+  --accent-solid:    #8b5cf6;
+  --accent-hover:    #7c3aed;
+  --success:         #34d399;
+  --danger:          #f87171;
+  --warning:         #fbbf24;
+  --shadow-card:     0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-hover:    0 16px 48px rgba(139, 92, 246, 0.3);
+  --blur:            20px;
+}
+
+/* Dark-theme page background override — higher opacity gradients */
+[data-theme="dark"] body {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(79, 70, 229, 0.15)  0%, transparent 60%),
+    var(--bg-page);
+}
+
+/* ------------------------------------------------------------
+   3. CSS Reset
+   ------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ------------------------------------------------------------
+   4. Base Body Styles
+   ------------------------------------------------------------ */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 16px; /* ≥ 14px — satisfies Requirement 12.4 */
+  color: var(--text-primary);
+  min-height: 100vh;
+
+  /* Radial gradient mesh page background — Light Theme */
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(124, 58, 237, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(79, 70, 229, 0.08)  0%, transparent 60%),
+    var(--bg-page);
+}
+
+/* ------------------------------------------------------------
+   5. Body — prevent horizontal overflow (Requirement 12.1)
+   ------------------------------------------------------------ */
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ------------------------------------------------------------
+   6. App Header (Requirement 12.7)
+   ------------------------------------------------------------ */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+}
+
+/* Theme-toggle: 36×36px circular icon button */
+#theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 200ms ease;
+  flex-shrink: 0;
+}
+
+#theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] #theme-toggle {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] #theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ------------------------------------------------------------
+   7. Dashboard Grid — responsive layout
+      (Requirements 12.7, 12.8, 12.9)
+   ------------------------------------------------------------ */
+.dashboard-grid {
+  display: grid;
+  gap: 24px;
+  padding: 0 24px 32px;
+  /* Default: single column (mobile-first) */
+  grid-template-columns: 1fr;
+}
+
+/* ≥ 1024px — 2-column grid (Requirement 12.7) */
+@media (min-width: 1024px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 32px 32px;
+  }
+}
+
+/* 640px–1023px — 2-column grid, widgets stack within each column
+   (Requirement 12.8) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 24px 32px;
+  }
+}
+
+/* < 640px — single column, full-width cards (Requirement 12.9) */
+@media (max-width: 639px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    padding: 0 16px 24px;
+  }
+}
+
+/* ------------------------------------------------------------
+   8. Card — glassmorphism widget panel
+      (Requirements 13.4, 13.8, 13.9)
+   ------------------------------------------------------------ */
+.card {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--bg-card-border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+/* Card hover lift (Requirement 13.9) */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* ------------------------------------------------------------
+   9. Clock / Greeting Typography
+      (Requirements 13.10, 1.1, 1.2)
+   ------------------------------------------------------------ */
+
+/* Clock digits — large, light-weight numerals (Requirement 13.10) */
+#clock {
+  display: block;
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* Date — secondary text colour */
+#date {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin-top: 4px;
+}
+
+/* Greeting — muted text colour */
+#greeting {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-top: 2px;
+}
+
+/* ------------------------------------------------------------
+   10. Button Variants
+       (Requirements 13.7, 12.6)
+   ------------------------------------------------------------ */
+
+/* Shared button base */
+.btn-primary,
+.btn-secondary,
+.btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: opacity 200ms ease, background 200ms ease, box-shadow 200ms ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* Primary — gradient fill (Requirement 13.7) */
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-start), var(--accent-end));
+  color: #fff;
+  border: none;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+}
+
+/* Secondary — transparent fill with accent border */
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--accent-solid);
+  color: var(--accent-solid);
+}
+
+.btn-secondary:hover {
+  background: rgba(99, 102, 241, 0.08);
+}
+
+/* Danger — transparent fill, danger colour, visible on row hover */
+.btn-danger {
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  padding: 4px 8px;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+/* Show delete button when its parent row is hovered or focused-within */
+li:hover .btn-danger,
+li:focus-within .btn-danger,
+.link-item:hover .btn-danger,
+.link-item:focus-within .btn-danger {
+  opacity: 1;
+}
+
+/* ------------------------------------------------------------
+   11. Form Elements — input and select
+       (Requirements 12.5, 12.6)
+   ------------------------------------------------------------ */
+input,
+select {
+  border: 1px solid var(--bg-card-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
+input:hover,
+select:hover {
+  border-color: var(--accent-solid);
+}
+
+/* ------------------------------------------------------------
+   12. Focus-visible outlines — keyboard navigation
+       (Requirement 12.6)
+   ------------------------------------------------------------ */
+:focus-visible {
+  outline: 2px solid var(--accent-solid);
+  outline-offset: 2px;
+}
+
+/* Remove default outline only when :focus-visible is supported */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Inputs get a coloured ring instead of the default outline */
+input:focus-visible,
+select:focus-visible {
+  border-color: var(--accent-solid);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  outline: none;
+}
+
+/* ------------------------------------------------------------
+   13. Inline validation messages
+       (Requirements 5.3, 5.4, 4.5, 9.3)
+   ------------------------------------------------------------ */
+.error-msg {
+  color: var(--danger);
+  font-size: 13px;
+  display: block;
+  min-height: 1.2em; /* reserve space to avoid layout shift */
+}
+
+.warn-msg {
+  color: var(--warning);
+  font-size: 13px;
+  display: block;
+  min-height: 1.2em;
+}
+
+/* ------------------------------------------------------------
+   14. Completed task title — strikethrough
+       (Requirement 7.3)
+   ------------------------------------------------------------ */
+.task-title.completed,
+.task-completed .task-title,
+li.completed .task-title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+/* ============================================================
+   Task 5 — Focus Timer SVG ring, task list, and links list
+   (Requirements 13.6, 3.1)
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   15. Timer Widget — centre layout
+       (Requirement 13.6)
+   ------------------------------------------------------------ */
+#timer-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Heading stays left-aligned within the centred column */
+#timer-widget h2 {
+  align-self: flex-start;
+}
+
+/* ------------------------------------------------------------
+   16. Timer Ring Container — SVG ring with centred digit overlay
+       (Requirement 13.6)
+   ------------------------------------------------------------ */
+.timer-ring-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* The SVG itself — sized to fill the container */
+#timer-ring {
+  display: block;
+  width: 200px;
+  height: 200px;
+}
+
+/* MM:SS digit display — absolutely centred inside the SVG */
+#timer-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 300;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------
+   17. SVG Ring Circles
+       (Requirement 13.6)
+   ------------------------------------------------------------ */
+
+/* Background track — subtle muted ring */
+.timer-ring-track {
+  fill: none;
+  stroke: var(--bg-card-border);
+  stroke-width: 8;
+}
+
+/* Progress arc — uses the linearGradient defined in the SVG markup */
+.timer-ring-progress {
+  fill: none;
+  stroke: url(#ring-gradient);
+  stroke-width: 8;
+  stroke-linecap: round;
+  /* Rotate so the arc starts at the top (12 o'clock) */
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  /* Smooth animation each tick (Requirement 13.6) */
+  transition: stroke-dashoffset 1s linear;
+}
+
+/* ------------------------------------------------------------
+   18. Timer Controls Row
+   ------------------------------------------------------------ */
+.timer-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* ------------------------------------------------------------
+   19. Duration Row
+   ------------------------------------------------------------ */
+.duration-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.duration-row label {
+  color: var(--text-secondary);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.duration-row #duration-input {
+  width: 72px;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------
+   20. Task List — plain list, flex rows
+       (Requirement 5.1, 7.1, 7.3)
+   ------------------------------------------------------------ */
+#task-list {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+#task-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: background 150ms ease;
+}
+
+#task-list li:hover {
+  background: rgba(99, 102, 241, 0.06);
+}
+
+/* Checkbox */
+#task-list li input[type="checkbox"] {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-solid);
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+/* Task title span */
+#task-list li .task-title {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+/* Edit button — icon-style, visible on row hover */
+#task-list li .btn-edit {
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 4px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 200ms ease, color 200ms ease;
+}
+
+#task-list li:hover .btn-edit,
+#task-list li:focus-within .btn-edit {
+  opacity: 1;
+}
+
+#task-list li .btn-edit:hover {
+  color: var(--accent-solid);
+}
+
+/* Inline edit input that replaces the title span */
+#task-list li .task-edit-input {
+  flex: 1;
+  font-size: 14px;
+}
+
+/* Task input row */
+.task-input-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.task-input-row #task-input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Sort row */
+.task-sort-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.task-sort-row label {
+  color: var(--text-secondary);
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------------
+   21. Links List — flex wrap, btn-primary buttons with delete overlay
+       (Requirements 9.1, 10.1)
+   ------------------------------------------------------------ */
+#links-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Each link is wrapped in a relative container for the delete overlay */
+.link-item {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The link button itself inherits .btn-primary styles */
+.link-item .link-btn {
+  padding-right: 28px; /* make room for the delete icon */
+}
+
+/* Delete icon — small ×, overlaid top-right on hover */
+.link-item .btn-danger {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  border: none;
+  cursor: pointer;
+}
+
+/* Show delete badge on link-item hover or focus-within */
+.link-item:hover .btn-danger,
+.link-item:focus-within .btn-danger {
+  opacity: 1;
+}
+
+/* Links input group */
+.links-input-group {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.links-input-group #link-label {
+  flex: 1;
+  min-width: 80px;
+}
+
+.links-input-group #link-url {
+  flex: 2;
+  min-width: 140px;
+}
+
+/* Name row in greeting widget */
+.name-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.name-row #name-input {
+  flex: 1;
+  min-width: 0;
+}

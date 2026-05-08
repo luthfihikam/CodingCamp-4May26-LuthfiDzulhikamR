@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Life Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <header class="app-header">
+    <div id="greeting-widget">
+      <span id="clock"></span>
+      <span id="date"></span>
+      <span id="greeting"></span>
+      <div class="name-row">
+        <input id="name-input" type="text" maxlength="50" placeholder="Your name" aria-label="Enter your name" />
+        <button id="name-save" class="btn-primary">Save</button>
+      </div>
+    </div>
+    <div class="header-controls">
+      <button id="theme-toggle" aria-label="Toggle dark mode">🌙</button>
+    </div>
+  </header>
+
+  <main class="dashboard-grid">
+
+    <!-- Focus Timer Widget -->
+    <section id="timer-widget" class="card" aria-labelledby="timer-heading">
+      <h2 id="timer-heading">Focus Timer</h2>
+
+      <div class="timer-ring-container">
+        <svg id="timer-ring" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="var(--accent-start)" />
+              <stop offset="100%" stop-color="var(--accent-end)" />
+            </linearGradient>
+          </defs>
+          <!-- Background track circle -->
+          <circle class="timer-ring-track" cx="100" cy="100" r="85" />
+          <!-- Progress circle -->
+          <circle class="timer-ring-progress" cx="100" cy="100" r="85" />
+        </svg>
+        <span id="timer-display" aria-live="polite" aria-label="Timer display">25:00</span>
+      </div>
+
+      <div class="timer-controls">
+        <button id="timer-start" class="btn-primary">Start</button>
+        <button id="timer-stop" class="btn-secondary">Stop</button>
+        <button id="timer-reset" class="btn-secondary">Reset</button>
+      </div>
+
+      <div class="duration-row">
+        <label for="duration-input">Duration (min):</label>
+        <input id="duration-input" type="number" min="1" max="120" value="25" aria-label="Pomodoro duration in minutes" />
+        <button id="duration-save" class="btn-primary">Set</button>
+      </div>
+      <span id="duration-error" class="error-msg" role="alert" aria-live="polite"></span>
+    </section>
+
+    <!-- Task Manager Widget -->
+    <section id="task-widget" class="card" aria-labelledby="task-heading">
+      <h2 id="task-heading">Tasks</h2>
+
+      <div class="task-input-row">
+        <input id="task-input" type="text" placeholder="Add a new task…" aria-label="New task title" />
+        <button id="task-add" class="btn-primary">Add</button>
+      </div>
+      <span id="task-error" class="error-msg" role="alert" aria-live="polite"></span>
+
+      <div class="task-sort-row">
+        <label for="task-sort">Sort by:</label>
+        <select id="task-sort" aria-label="Sort tasks">
+          <option value="default">Default (Date Added)</option>
+          <option value="az">A–Z</option>
+          <option value="za">Z–A</option>
+          <option value="completedLast">Completed Last</option>
+        </select>
+      </div>
+
+      <ul id="task-list" aria-label="Task list"></ul>
+    </section>
+
+    <!-- Quick Links Widget -->
+    <section id="links-widget" class="card" aria-labelledby="links-heading">
+      <h2 id="links-heading">Quick Links</h2>
+
+      <div class="links-input-group">
+        <input id="link-label" type="text" placeholder="Label" aria-label="Link label" />
+        <input id="link-url" type="url" placeholder="https://example.com" aria-label="Link URL" />
+        <button id="link-add" class="btn-primary">Add</button>
+      </div>
+      <span id="link-error" class="error-msg" role="alert" aria-live="polite"></span>
+
+      <div id="links-list" aria-label="Quick links"></div>
+    </section>
+
+  </main>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
